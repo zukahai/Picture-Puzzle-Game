@@ -11,30 +11,23 @@ import java.net.URLConnection;
 import javax.swing.*;
 
 public class PuzzleGame extends JFrame implements KeyListener, ActionListener{
-	Color colorYes = Color.black; // Màu n�?n của ô trống đã �?ÚNG vị trí.
-	Color colorNo = Color.yellow; // Màu n�?n của ô trống đã SAI vị trí.
-	Color colorNumber = Color.green; // Màu của chữ số.
-	Color colorBox = Color.LIGHT_GRAY; // Màu của ô trống.
 	Timer timer;
 	int maxSize = 1001;
-	int indexI, indexJ; // t�?a độ của ô trống.
-	int n; // lưu kích thước của cạnh và hàng trong mảng.
+	int indexI, indexJ;
+	int n = 3;
 	String name, sdt;
 	private Container cn;
 	private JPanel pn, pn2, pn3; 
-	private JButton b[][] = new JButton[maxSize][maxSize]; // một mảng hai chi�?u là các button.
+	private JButton b[][] = new JButton[maxSize][maxSize];
+	private int[][]v = new int[maxSize][maxSize];
 	private JButton highScore_bt, newGame_bt;
 	private JLabel time_lb;
 	JButton size;
-	public PuzzleGame(String s, String SIZE) {
-		super(s);
+	public PuzzleGame() {
+		super("Image puzzle game - HaiZuka");
 		this.name = name;
 		this.sdt = sdt;
 		cn = this.getContentPane();
-		size = new JButton(SIZE);
-		n = Integer.parseInt(SIZE);
-		if (n == 8)
-			n = 3;
 		time_lb = new JLabel("00:00:00:00");
 		time_lb.setFont(new Font("Arial", 1, 20));
 		time_lb.addKeyListener(this);
@@ -45,10 +38,16 @@ public class PuzzleGame extends JFrame implements KeyListener, ActionListener{
 		highScore_bt = new JButton("High Score");
 		highScore_bt.addActionListener(this);
 		highScore_bt.addKeyListener(this);
+		highScore_bt.setFont(new Font("UTM Nokia", 1, 15));
+		highScore_bt.setBackground(Color.white);
+		highScore_bt.setBorder(BorderFactory.createMatteBorder(5, 5, 5, 5, Color.green));
 		
 		newGame_bt = new JButton("New game");
 		newGame_bt.addActionListener(this);
-		newGame_bt.addKeyListener(this); 
+		newGame_bt.addKeyListener(this);
+		newGame_bt.setFont(new Font("UTM Nokia", 1, 15));
+		newGame_bt.setBackground(Color.white);
+		newGame_bt.setBorder(BorderFactory.createMatteBorder(5, 5, 5, 5, Color.green));
 		
 		pn3 = new JPanel();
 		pn3.setLayout(new FlowLayout());
@@ -60,10 +59,11 @@ public class PuzzleGame extends JFrame implements KeyListener, ActionListener{
 		// khởi tạo ma trân mặc định.
 		for (int i = 1; i <= n; i++) {
 			for (int j = 1; j <= n; j++){
-				b[i][j] = new JButton(String.valueOf(n*(i-1)+j));
+				b[i][j] = new JButton("");
+				v[i][j] = n*(i-1)+j;
 				b[i][j].addKeyListener(this);
-				b[i][j].setForeground(colorNumber);
-				b[i][j].setFont(new Font("Arial",Font.BOLD,72));
+				b[i][j].setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.black));
+//				b[i][j].setBorder(null);
 				pn.add(b[i][j]);
 			}
 		}
@@ -77,19 +77,17 @@ public class PuzzleGame extends JFrame implements KeyListener, ActionListener{
 				i2 = (int) (Math.round((n-1)*Math.random()+1));
 				j2 = (int) (Math.round((n-1)*Math.random()+1));
 			} while ((i2 == n && j2 == n) ||(i2 == i1&&j2 == j1));
-			String p = b[i1][j1].getText();
-			b[i1][j1].setText(b[i2][j2].getText());
-			b[i2][j2].setText(p);
+			int p = v[i1][j1];
+			v[i1][j1] = v[i2][j2];
+			v[i2][j2] = p;
 		}
-		b[n][n].setText("");
-		b[n][n].setBackground(colorBox);
-		// G�?i hàm cập nhật màu n�?n của các ô trống
-		updateColor();
+		updateImages();
 		cn.add(pn2, "North");
 		cn.add(pn);
 		cn.add(pn3, "South");
 		this.setVisible(true);
-		this.pack();
+//		this.setResizable(false);
+		this.setSize(600, 700);
 		this.setLocationRelativeTo(null);
 		indexI = n; indexJ = n;
 		timer = new Timer(10, new ActionListener() {
@@ -97,6 +95,13 @@ public class PuzzleGame extends JFrame implements KeyListener, ActionListener{
 				time_lb.setText(next(time_lb));
 			}
 		});
+	}
+	
+	private Icon getIcon(int index) {
+		int width = 200, height = 200;
+		Image image = new ImageIcon(getClass().getResource("/Game/Image/1/" + index + ".jpg")).getImage();
+		Icon icon = new ImageIcon(image.getScaledInstance(width, height, image.SCALE_SMOOTH));
+		return icon;
 	}
 	
 	public String next(JLabel lb) {
@@ -132,52 +137,26 @@ public class PuzzleGame extends JFrame implements KeyListener, ActionListener{
 	}
 	
 	// Hàm cập nhập màu.
-	public void updateColor(){
+	public void updateImages(){
 		for (int i = 1; i <= n; i++) {
 			for (int j = 1; j <= n; j++) {
-				if (b[i][j].getText() != "") {
-					if (Integer.parseInt(b[i][j].getText()) == n*(i-1)+j) {
-						b[i][j].setBackground(colorYes);
-					}
-					else {
-						b[i][j].setBackground(colorNo);
-					}
-				} else {
-					b[i][j].setBackground(colorBox);
-				}
+				b[i][j].setIcon(getIcon(v[i][j]));
 			}	
 		}
 	}
 	// Hàm kiểm tra hoàn thành màn chơi đó.
 	public void checkWin() {
-		if (b[n][n].getText()=="") {
-			b[n][n].setText(String.valueOf(n*n));
-			boolean kt = true;
-			for (int i = 1; i <= n; i++) {
-				for (int j = 1; j <= n; j++) {
-					if (Integer.parseInt(b[i][j].getText()) != n*(i-1)+j) kt = false;					
-				}
+		boolean kt = true;
+		for (int i = 1; i <= n; i++) {
+			for (int j = 1; j <= n; j++) {
+				if (v[i][j] != n*(i-1)+j) kt = false;					
 			}
-			if (kt) {
-				this.dispose(); // �?óng cửa số màn hình hiển tại.
-				// Qua level mới
-				try {
-					URL url = new URL("https://haizukon.000webhostapp.com/HighScore/GameSapXepSo/level_" + String.valueOf(Integer.parseInt(size.getText()) - 2) + "?vkuName=" + name + "&score=" + time_lb.getText() + "&sdt=" + sdt);
-					URLConnection urlConnection = url.openConnection();
-					HttpURLConnection connection = null;
-					if(urlConnection instanceof HttpURLConnection) {
-						connection = (HttpURLConnection) urlConnection;
-					}
-					BufferedReader in = new BufferedReader(
-					new InputStreamReader(connection.getInputStream()));
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-				new PuzzleGame("VKU - Game Sắp Xếp Số - Level: " + (n + 1),String.valueOf(n+1));
-			} else {
-				b[n][n].setText(String.valueOf(""));
-			}
+		}
+		if (kt) {
+			this.dispose();
+			new PuzzleGame();
+		} else {
+			b[n][n].setText(String.valueOf(""));
 		}
 	}
 	
@@ -187,48 +166,49 @@ public class PuzzleGame extends JFrame implements KeyListener, ActionListener{
 		if (e.getKeyCode()==KeyEvent.VK_ESCAPE) System.exit(0); // thoát chương trình
 		if (e.getKeyCode()==KeyEvent.VK_DOWN) { // khi bấm phím xuống: Hoán đổi vị trị của ôn trống với ô phím trên nó.
 			if (indexI > 1) {
-				String s = b[indexI][indexJ].getText();
-				b[indexI][indexJ].setText(b[indexI-1][indexJ].getText());
-				b[indexI-1][indexJ].setText(s);
+				int s = v[indexI][indexJ];
+				v[indexI][indexJ] = v[indexI-1][indexJ];
+				v[indexI-1][indexJ] = s;
 				indexI--;
 			}
 		}
 		
 		if (e.getKeyCode() == KeyEvent.VK_UP) { //khi bấm phím lên: Hoán đổi vị trị của ôn trống với ô phím dưới nó.
 			if (indexI < n) {
-				String s = b[indexI][indexJ].getText();
-				b[indexI][indexJ].setText(b[indexI+1][indexJ].getText());
-				b[indexI+1][indexJ].setText(s);
+				int s = v[indexI][indexJ];
+				v[indexI][indexJ] = v[indexI+1][indexJ];
+				v[indexI+1][indexJ] = s;
 				indexI++;
 			}
 		}
 		
 		if (e.getKeyCode() == KeyEvent.VK_RIGHT) {//khi bấm phím sang phải: Hoán đổi vị trị của ôn trống với ô bên trái nó.
 			if (indexJ > 1) {
-				String s = b[indexI][indexJ].getText();
-				b[indexI][indexJ].setText(b[indexI][indexJ-1].getText());
-				b[indexI][indexJ-1].setText(s);
+				int s = v[indexI][indexJ];
+				v[indexI][indexJ] = v[indexI][indexJ-1];
+				v[indexI][indexJ-1] = s;
 				indexJ--;
 			}
 		}
 		if (e.getKeyCode() == KeyEvent.VK_LEFT) { //khi bấm phím sang trái: Hoán đổi vị trị của ôn trống với ô bên phải nó.
 			if (indexJ < n) {
-				String s = b[indexI][indexJ].getText();
-				b[indexI][indexJ].setText(b[indexI][indexJ+1].getText());
-				b[indexI][indexJ+1].setText(s);
+				int s = v[indexI][indexJ];
+				v[indexI][indexJ] = v[indexI][indexJ+1];
+				v[indexI][indexJ+1] = s;
 				indexJ++;
 			}
 		}
+		updateImages();
 		checkWin();
 	}
 	public void keyReleased(KeyEvent e) {
-		updateColor();
+		updateImages();
 	}
 	public void keyTyped(KeyEvent e) {
 		
 	}
 	public static void main(String[] args) {
-		new PuzzleGame("VKU - Game Sắp Xếp Số - Level: 1", "3");
+		new PuzzleGame();
 	}
 
 	@Override
@@ -238,7 +218,7 @@ public class PuzzleGame extends JFrame implements KeyListener, ActionListener{
 			
 		}
 		else if (e.getActionCommand().endsWith(newGame_bt.getText())) {
-			new PuzzleGame("VKU - Game Sắp Xếp Số - Level: 1", "3");
+			new PuzzleGame();
 			this.dispose();
 		}
 	}
