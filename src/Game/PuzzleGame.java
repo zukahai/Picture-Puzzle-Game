@@ -1,4 +1,4 @@
-package GameSapXepSo;
+package Game;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.BufferedReader;
@@ -7,27 +7,26 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
-import GameSapXepSo.HighScore;
 
 import javax.swing.*;
 
-public class GameSapXepSo extends JFrame implements KeyListener, ActionListener{
-	Color colorYes = Color.black; // Màu nền của ô trống đã ĐÚNG vị trí.
-	Color colorNo = Color.yellow; // Màu nền của ô trống đã SAI vị trí.
+public class PuzzleGame extends JFrame implements KeyListener, ActionListener{
+	Color colorYes = Color.black; // Màu n�?n của ô trống đã �?ÚNG vị trí.
+	Color colorNo = Color.yellow; // Màu n�?n của ô trống đã SAI vị trí.
 	Color colorNumber = Color.green; // Màu của chữ số.
 	Color colorBox = Color.LIGHT_GRAY; // Màu của ô trống.
 	Timer timer;
 	int maxSize = 1001;
-	int indexI, indexJ; // tọa độ của ô trống.
+	int indexI, indexJ; // t�?a độ của ô trống.
 	int n; // lưu kích thước của cạnh và hàng trong mảng.
 	String name, sdt;
 	private Container cn;
 	private JPanel pn, pn2, pn3; 
-	private JButton b[][] = new JButton[maxSize][maxSize]; // một mảng hai chiều là các button.
+	private JButton b[][] = new JButton[maxSize][maxSize]; // một mảng hai chi�?u là các button.
 	private JButton highScore_bt, newGame_bt;
 	private JLabel time_lb;
 	JButton size;
-	public GameSapXepSo(String s, String SIZE, String name, String sdt) {
+	public PuzzleGame(String s, String SIZE) {
 		super(s);
 		this.name = name;
 		this.sdt = sdt;
@@ -84,7 +83,7 @@ public class GameSapXepSo extends JFrame implements KeyListener, ActionListener{
 		}
 		b[n][n].setText("");
 		b[n][n].setBackground(colorBox);
-		// Gọi hàm cập nhật màu nền của các ô trống
+		// G�?i hàm cập nhật màu n�?n của các ô trống
 		updateColor();
 		cn.add(pn2, "North");
 		cn.add(pn);
@@ -160,7 +159,7 @@ public class GameSapXepSo extends JFrame implements KeyListener, ActionListener{
 				}
 			}
 			if (kt) {
-				this.dispose(); // Đóng cửa số màn hình hiển tại.
+				this.dispose(); // �?óng cửa số màn hình hiển tại.
 				// Qua level mới
 				try {
 					URL url = new URL("https://haizukon.000webhostapp.com/HighScore/GameSapXepSo/level_" + String.valueOf(Integer.parseInt(size.getText()) - 2) + "?vkuName=" + name + "&score=" + time_lb.getText() + "&sdt=" + sdt);
@@ -175,7 +174,7 @@ public class GameSapXepSo extends JFrame implements KeyListener, ActionListener{
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-				new GameSapXepSo("VKU - Game Sắp Xếp Số - Level: " + (n + 1),String.valueOf(n+1), name, sdt);
+				new PuzzleGame("VKU - Game Sắp Xếp Số - Level: " + (n + 1),String.valueOf(n+1));
 			} else {
 				b[n][n].setText(String.valueOf(""));
 			}
@@ -229,32 +228,17 @@ public class GameSapXepSo extends JFrame implements KeyListener, ActionListener{
 		
 	}
 	public static void main(String[] args) {
-		String name = JOptionPane.showInputDialog(null, "Nhập tên của bạn\n" + "(Tiếng việt không dấu)", "");
-		String sdt = "";
-		String checkSdt = "^0[0-9]{9}";
-		do {
-			sdt = JOptionPane.showInputDialog("Nhập số điện thoại của bạn:\n(Dùng để trao quà)");
-			if (!sdt.matches(checkSdt))
-				JOptionPane.showMessageDialog(null, "Số điện thoại không đúng\n" + "Vui lòng nhập lại");
-		} while(!sdt.matches(checkSdt));
-		JOptionPane.showMessageDialog(null, "Đã lưu điểm");
-		name = name.replace(" ", "%20");
-		System.out.println(name);
-		new GameSapXepSo("VKU - Game Sắp Xếp Số - Level: 1", "3", name, sdt);
+		new PuzzleGame("VKU - Game Sắp Xếp Số - Level: 1", "3");
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		if (e.getActionCommand().endsWith(highScore_bt.getText())) {
-			new HighScore(1);
+			
 		}
 		else if (e.getActionCommand().endsWith(newGame_bt.getText())) {
-			String name = JOptionPane.showInputDialog(null, "Nhập tên của bạn\n" + "(Tiếng việt không dấu)", "");
-			String sdt = JOptionPane.showInputDialog("Nhập số điện thoại của bạn:\n(Dùng để trao quà)");
-			name = name.replace(" ", "%20");
-			System.out.println(name);
-			new GameSapXepSo("VKU - Game Sắp Xếp Số - Level: 1", "3", name, sdt);
+			new PuzzleGame("VKU - Game Sắp Xếp Số - Level: 1", "3");
 			this.dispose();
 		}
 	}
