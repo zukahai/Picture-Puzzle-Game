@@ -12,14 +12,13 @@ import javax.swing.*;
 
 public class PuzzleGame extends JFrame implements KeyListener, ActionListener{
 	Timer timer;
-	int maxSize = 1001;
 	int indexI, indexJ;
 	int n = 3;
 	int rd = 1;
 	private Container cn;
 	private JPanel pn, pn2, pn3; 
-	private JButton b[][] = new JButton[maxSize][maxSize];
-	private int[][]v = new int[maxSize][maxSize];
+	private JButton b[][] = new JButton[n + 1][n + 1];
+	private int[][]v = new int[n + 1][n + 1];
 	private JButton originalIm, newGame_bt;
 	private JLabel time_lb;
 	JButton size;
@@ -80,6 +79,7 @@ public class PuzzleGame extends JFrame implements KeyListener, ActionListener{
 			v[i2][j2] = p;
 		}
 		updateImages();
+		pn3.setSize(100, 100);
 		cn.add(pn2, "North");
 		cn.add(pn);
 		cn.add(pn3, "South");
@@ -135,7 +135,6 @@ public class PuzzleGame extends JFrame implements KeyListener, ActionListener{
 		return kq;
 	}
 	
-	// Hàm cập nhập màu.
 	public void updateImages(){
 		for (int i = 1; i <= n; i++) {
 			for (int j = 1; j <= n; j++) {
@@ -143,7 +142,6 @@ public class PuzzleGame extends JFrame implements KeyListener, ActionListener{
 			}	
 		}
 	}
-	// Hàm kiểm tra hoàn thành màn chơi đó.
 	public void checkWin() {
 		boolean kt = true;
 		for (int i = 1; i <= n; i++) {
