@@ -15,18 +15,17 @@ public class PuzzleGame extends JFrame implements KeyListener, ActionListener{
 	int maxSize = 1001;
 	int indexI, indexJ;
 	int n = 3;
-	String name, sdt;
+	int rd = 1;
 	private Container cn;
 	private JPanel pn, pn2, pn3; 
 	private JButton b[][] = new JButton[maxSize][maxSize];
 	private int[][]v = new int[maxSize][maxSize];
-	private JButton highScore_bt, newGame_bt;
+	private JButton originalIm, newGame_bt;
 	private JLabel time_lb;
 	JButton size;
-	public PuzzleGame() {
+	public PuzzleGame(int rd) {
 		super("Image puzzle game - HaiZuka");
-		this.name = name;
-		this.sdt = sdt;
+		this.rd = rd;
 		cn = this.getContentPane();
 		time_lb = new JLabel("00:00:00:00");
 		time_lb.setFont(new Font("Arial", 1, 20));
@@ -35,14 +34,14 @@ public class PuzzleGame extends JFrame implements KeyListener, ActionListener{
 		pn2.setLayout(new FlowLayout());
 		pn2.add(time_lb);
 		
-		highScore_bt = new JButton("High Score");
-		highScore_bt.addActionListener(this);
-		highScore_bt.addKeyListener(this);
-		highScore_bt.setFont(new Font("UTM Nokia", 1, 15));
-		highScore_bt.setBackground(Color.white);
-		highScore_bt.setBorder(BorderFactory.createMatteBorder(5, 5, 5, 5, Color.green));
+		originalIm = new JButton("Original Image");
+		originalIm.addActionListener(this);
+		originalIm.addKeyListener(this);
+		originalIm.setFont(new Font("UTM Nokia", 1, 15));
+		originalIm.setBackground(Color.white);
+		originalIm.setBorder(BorderFactory.createMatteBorder(5, 5, 5, 5, Color.green));
 		
-		newGame_bt = new JButton("New game");
+		newGame_bt = new JButton("New Game");
 		newGame_bt.addActionListener(this);
 		newGame_bt.addKeyListener(this);
 		newGame_bt.setFont(new Font("UTM Nokia", 1, 15));
@@ -52,11 +51,10 @@ public class PuzzleGame extends JFrame implements KeyListener, ActionListener{
 		pn3 = new JPanel();
 		pn3.setLayout(new FlowLayout());
 		pn3.add(newGame_bt);
-		pn3.add(highScore_bt);
+		pn3.add(originalIm);
 		
 		pn = new JPanel();
 		pn.setLayout(new GridLayout(n,n));
-		// khởi tạo ma trân mặc định.
 		for (int i = 1; i <= n; i++) {
 			for (int j = 1; j <= n; j++){
 				b[i][j] = new JButton("");
@@ -86,9 +84,10 @@ public class PuzzleGame extends JFrame implements KeyListener, ActionListener{
 		cn.add(pn);
 		cn.add(pn3, "South");
 		this.setVisible(true);
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
 //		this.setResizable(false);
 		this.setSize(600, 700);
-		this.setLocationRelativeTo(null);
+		this.setLocation(650, 0);
 		indexI = n; indexJ = n;
 		timer = new Timer(10, new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -99,7 +98,7 @@ public class PuzzleGame extends JFrame implements KeyListener, ActionListener{
 	
 	private Icon getIcon(int index) {
 		int width = 200, height = 200;
-		Image image = new ImageIcon(getClass().getResource("/Game/Image/1/" + index + ".jpg")).getImage();
+		Image image = new ImageIcon(getClass().getResource("/Game/Image/" + rd + "/" + index + ".jpg")).getImage();
 		Icon icon = new ImageIcon(image.getScaledInstance(width, height, image.SCALE_SMOOTH));
 		return icon;
 	}
@@ -153,8 +152,8 @@ public class PuzzleGame extends JFrame implements KeyListener, ActionListener{
 			}
 		}
 		if (kt) {
+			new newGame();
 			this.dispose();
-			new PuzzleGame();
 		} else {
 			b[n][n].setText(String.valueOf(""));
 		}
@@ -208,17 +207,17 @@ public class PuzzleGame extends JFrame implements KeyListener, ActionListener{
 		
 	}
 	public static void main(String[] args) {
-		new PuzzleGame();
+		new newGame();
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
-		if (e.getActionCommand().endsWith(highScore_bt.getText())) {
-			
+		if (e.getActionCommand().endsWith(originalIm.getText())) {
+			new OriginalIm(rd);
 		}
 		else if (e.getActionCommand().endsWith(newGame_bt.getText())) {
-			new PuzzleGame();
+			new newGame();
 			this.dispose();
 		}
 	}
