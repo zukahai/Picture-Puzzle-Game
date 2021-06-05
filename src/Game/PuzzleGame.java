@@ -233,7 +233,11 @@ public class PuzzleGame extends JFrame implements KeyListener, ActionListener{
 			this.dispose();
 		} else {
 			int K = Integer.parseInt(e.getActionCommand());
-			System.out.println(K);
+			int ii = (K - 1) / 3 + 1;
+			int jj = (K - 1) % 3 + 1;
+			if ((ii == indexI) ^ (jj == indexJ)) {
+				System.out.println("Ok");
+			}
 		}
 	}
 }
