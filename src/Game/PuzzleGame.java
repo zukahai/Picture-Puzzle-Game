@@ -236,8 +236,30 @@ public class PuzzleGame extends JFrame implements KeyListener, ActionListener{
 			int ii = (K - 1) / 3 + 1;
 			int jj = (K - 1) % 3 + 1;
 			if ((ii == indexI) ^ (jj == indexJ)) {
-				System.out.println("Ok");
+				timer.start();
+				if (ii == indexI) {
+					if (jj < indexJ) {
+						for (int j = indexJ; j > jj; j--)
+							v[ii][j] = v[ii][j - 1];
+					} else {
+						for (int j = indexJ; j < jj; j++)
+							v[ii][j] = v[ii][j + 1];
+					}
+				} else {
+					if (ii < indexI) {
+						for (int i = indexI; i > ii; i--)
+							v[i][jj] = v[i - 1][jj];
+					} else {
+						for (int i = indexI; i < ii; i++)
+							v[i][jj] = v[i + 1][jj];
+					}
+				}
+				v[ii][jj] = 9;
+				indexI = ii;
+				indexJ = jj;
+				checkWin();
 			}
+			updateImages();
 		}
 	}
 }
