@@ -34,8 +34,8 @@ public class PuzzleGame extends JFrame implements KeyListener, ActionListener{
 		pn2.setLayout(new FlowLayout());
 		pn2.add(time_lb);
 		
-		originalIm = new JButton("Original Image");
-		originalIm.setText("");
+		originalIm = new JButton("");
+		originalIm.setActionCommand("Original Image");
 		originalIm.setIcon(getIconButton("original", 200, 50));
 		originalIm.addActionListener(this);
 		originalIm.addKeyListener(this);
@@ -43,8 +43,8 @@ public class PuzzleGame extends JFrame implements KeyListener, ActionListener{
 		originalIm.setBackground(Color.white);
 		originalIm.setBorder(null);
 		
-		newGame_bt = new JButton("New Game");
-		newGame_bt.setText("");
+		newGame_bt = new JButton("");
+		newGame_bt.setActionCommand("newGame");
 		newGame_bt.setIcon(getIconButton("newgame", 200, 50));
 		newGame_bt.addActionListener(this);
 		newGame_bt.addKeyListener(this);
@@ -90,8 +90,8 @@ public class PuzzleGame extends JFrame implements KeyListener, ActionListener{
 		cn.add(pn3, "South");
 		this.setVisible(true);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-//		this.setResizable(false);
-		this.setSize(600, 700);
+		this.setResizable(false);
+		this.setSize(630, 730);
 		this.setLocation(650, 0);
 		indexI = n; indexJ = n;
 		timer = new Timer(10, new ActionListener() {
