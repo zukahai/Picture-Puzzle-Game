@@ -62,7 +62,9 @@ public class PuzzleGame extends JFrame implements KeyListener, ActionListener{
 		for (int i = 1; i <= n; i++) {
 			for (int j = 1; j <= n; j++){
 				b[i][j] = new JButton("");
-				v[i][j] = n*(i-1)+j;
+				b[i][j].addActionListener(this);
+				b[i][j].setActionCommand(n * (i - 1) + j + "");
+				v[i][j] = n * (i - 1) + j;
 				b[i][j].addKeyListener(this);
 				b[i][j].setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.black));
 //				b[i][j].setBorder(null);
@@ -229,6 +231,9 @@ public class PuzzleGame extends JFrame implements KeyListener, ActionListener{
 		else if (e.getActionCommand().equals(newGame_bt.getActionCommand())) {
 			new newGame();
 			this.dispose();
+		} else {
+			int K = Integer.parseInt(e.getActionCommand());
+			System.out.println(K);
 		}
 	}
 }
