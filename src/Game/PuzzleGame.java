@@ -26,6 +26,7 @@ public class PuzzleGame extends JFrame implements KeyListener, ActionListener{
 		super("Image puzzle game - HaiZuka");
 		this.rd = rd;
 		cn = this.getContentPane();
+		cn.setBackground(Color.white);
 		time_lb = new JLabel("00:00:00:00");
 		time_lb.setFont(new Font("Arial", 1, 20));
 		time_lb.addKeyListener(this);
@@ -34,18 +35,22 @@ public class PuzzleGame extends JFrame implements KeyListener, ActionListener{
 		pn2.add(time_lb);
 		
 		originalIm = new JButton("Original Image");
+		originalIm.setText("");
+		originalIm.setIcon(getIconButton("original", 200, 50));
 		originalIm.addActionListener(this);
 		originalIm.addKeyListener(this);
 		originalIm.setFont(new Font("UTM Nokia", 1, 15));
 		originalIm.setBackground(Color.white);
-		originalIm.setBorder(BorderFactory.createMatteBorder(5, 5, 5, 5, Color.green));
+		originalIm.setBorder(null);
 		
 		newGame_bt = new JButton("New Game");
+		newGame_bt.setText("");
+		newGame_bt.setIcon(getIconButton("newgame", 200, 50));
 		newGame_bt.addActionListener(this);
 		newGame_bt.addKeyListener(this);
 		newGame_bt.setFont(new Font("UTM Nokia", 1, 15));
 		newGame_bt.setBackground(Color.white);
-		newGame_bt.setBorder(BorderFactory.createMatteBorder(5, 5, 5, 5, Color.green));
+		newGame_bt.setBorder(null);
 		
 		pn3 = new JPanel();
 		pn3.setLayout(new FlowLayout());
@@ -99,6 +104,13 @@ public class PuzzleGame extends JFrame implements KeyListener, ActionListener{
 	private Icon getIcon(int index) {
 		int width = 200, height = 200;
 		Image image = new ImageIcon(getClass().getResource("/Game/Image/" + rd + "/" + index + ".jpg")).getImage();
+		Icon icon = new ImageIcon(image.getScaledInstance(width, height, image.SCALE_SMOOTH));
+		return icon;
+	}
+	
+	private Icon getIconButton(String nameIM, int w, int h) {
+		int width = w, height = h;
+		Image image = new ImageIcon(getClass().getResource("/Game/Button/" + nameIM + ".jpg")).getImage();
 		Icon icon = new ImageIcon(image.getScaledInstance(width, height, image.SCALE_SMOOTH));
 		return icon;
 	}
@@ -211,10 +223,10 @@ public class PuzzleGame extends JFrame implements KeyListener, ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
-		if (e.getActionCommand().endsWith(originalIm.getText())) {
+		if (e.getActionCommand().equals(originalIm.getActionCommand())) {
 			new OriginalIm(rd);
 		}
-		else if (e.getActionCommand().endsWith(newGame_bt.getText())) {
+		else if (e.getActionCommand().equals(newGame_bt.getActionCommand())) {
 			new newGame();
 			this.dispose();
 		}
