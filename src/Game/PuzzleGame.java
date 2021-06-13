@@ -22,8 +22,10 @@ public class PuzzleGame extends JFrame implements KeyListener, ActionListener{
 	private JButton originalIm, newGame_bt;
 	private JLabel time_lb;
 	JButton size;
-	public PuzzleGame(int rd) {
+	OriginalIm Ori;
+	public PuzzleGame(int rd, OriginalIm Ori) {
 		super("Image puzzle game - HaiZuka");
+		this.Ori = Ori;
 		this.rd = rd;
 		cn = this.getContentPane();
 		cn.setBackground(Color.white);
@@ -165,6 +167,7 @@ public class PuzzleGame extends JFrame implements KeyListener, ActionListener{
 		}
 		if (kt) {
 			new newGame();
+			Ori.dispose();
 			this.dispose();
 		} else {
 			b[n][n].setText(String.valueOf(""));
